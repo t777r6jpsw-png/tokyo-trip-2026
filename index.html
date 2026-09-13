@@ -20,7 +20,10 @@ main{max-width:900px;margin:auto;padding:14px}.toolbar{display:flex;gap:7px;flex
 .quicklinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.quicklinks a{background:#f7efe8;border:1px solid var(--line);border-radius:8px;padding:6px 8px;color:#7d523d;text-decoration:none;font-size:11px}.link-section{margin-top:24px}.linkcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0}.linkcard a{color:var(--accent);text-decoration:none;font-size:13px}
 .modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:flex-end;justify-content:center}.modal.open{display:flex}.box{background:#fff;width:min(600px,100%);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}label{font-size:11px;color:var(--muted)}input,select,textarea{width:100%;font:inherit;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:9px}textarea{min-height:70px}.modal-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}.routehint{grid-column:1/-1;background:var(--green);border-radius:9px;padding:8px;font-size:11px;color:#27623c}
 @media(max-width:560px){.item{grid-template-columns:72px 1fr 25px}.actions{flex-direction:column}}
-.transport-gap{display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 8px;padding:7px 10px;border:0;background:transparent;min-height:38px}.transport-gap.compact .tg-icon{font-size:18px;line-height:1}.transport-gap.compact .tg-label{font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}.transport-gap.compact .tg-mode{width:auto;max-width:96px;border:1px solid var(--line);border-radius:9px;background:#fff;padding:5px 6px;font-size:11px}.transport-gap.compact .tg-map{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:var(--green);text-decoration:none;font-size:15px}</style></head>
+
+.transport-gap{display:flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:3px 8px;margin:1px 0;color:var(--muted);font-size:12px;font-weight:600}
+.transport-gap .transport-icon{font-size:16px}
+</style></head>
 <body>
 <header><h1>Tokyo Trip Planner</h1><div class="sub">2026/12/2–12/7 · 手機版 PWA · 可編輯 · V9</div><div id="tabs" class="tabs"></div></header>
 <main>
@@ -30,8 +33,8 @@ main{max-width:900px;margin:auto;padding:14px}.toolbar{display:flex;gap:7px;flex
 </main>
 <div id="modal" class="modal"><div class="box"><h3 id="modalTitle">新增行程</h3><div class="grid">
 <label>開始<input id="fStart" type="time"></label><label>結束<input id="fEnd" type="time"></label>
-<label>起點<input id="fFrom" type="text" placeholder="自己輸入起點"></label><label>終點<input id="fTo" type="text" placeholder="自己輸入終點"></label>
-<label>交通方式<select id="fMode"><option value="transit">🚆 大眾運輸</option><option value="walk">🚶 步行</option><option value="taxi">🚕 計程車</option></select></label><label style="display:flex;align-items:end"><button type="button" class="btn" style="width:100%" onclick="autoRoute()">📍 用 Google Maps 查路線</button></label>
+<label>起點<input id="fFrom" type="text" placeholder="自行輸入起點"></label><label>終點<input id="fTo" type="text" placeholder="自行輸入終點"></label>
+<label>交通方式<select id="fMode"><option value="transit">🚆 大眾運輸</option><option value="walk">🚶 步行</option><option value="taxi">🚕 計程車</option></select></label><label style="display:flex;align-items:end"><button type="button" class="btn" style="width:100%" onclick="autoRoute()">⚡ 自動填入通勤時間</button></label>
 <label class="full">行程<input id="fTitle"></label><label>類別<select id="fCat"><option>交通</option><option>美食</option><option>景點</option><option>購物</option><option>迪士尼</option><option>住宿</option><option>機場</option><option>自由</option></select></label>
 <label>Google Maps 地點<input id="fPlace"></label><label>預約／票券<select id="fBook"><option value="auto">自動判斷</option><option value="restaurant">餐廳預約</option><option value="ticket">門票／票券</option><option value="none">不用預約</option></select></label><label>提前提醒<select id="fAdvance"><option value="0">不提醒</option><option value="month">1 個月前</option><option value="60">60 天前</option><option value="30">30 天前</option><option value="14">14 天前</option><option value="7">7 天前</option><option value="custom">自訂天數</option></select></label><label id="customDaysWrap" style="display:none">提前幾天<input id="fCustomDays" type="number" min="1" max="365" value="30"></label><label class="full">備註<textarea id="fNote"></textarea></label>
 </div><div class="modal-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="saveItem()">儲存</button></div></div></div>
@@ -104,6 +107,8 @@ const original={"days":[
 ],"links":{"2026-12-02":[["✈️ 成田機場官方","https://www.narita-airport.jp/en/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]],"2026-12-03":[["🎫 東京迪士尼官方日曆","https://www.tokyodisneyresort.jp/tdl/daily/calendar/20261203/"],["🎭 東京迪士尼官方表演／花車時刻","https://www.tokyodisneyresort.jp/en/tdl/show/schedule/"],["🎫 東京迪士尼門票","https://www.tokyodisneyresort.jp/en/ticket/"]],"2026-12-04":[["🗼 東京晴空塔官方票券","https://www.tokyo-skytree.jp/en/ticket/"],["🍖 敘敘苑官方","https://www.jojoen.co.jp/"]],"2026-12-05":[["🍲 山笑ふ表參道｜官方線上預約","https://www.yamawarau-flavorworks.com/shabu-shabu-omotesandou"],["🍣 廻転鮨 銀座おのでら｜官方資訊","https://onodera-group.com/kaitensushi-ginza/"]],"2026-12-06":[["🛍️ 銀座 UNIQLO","https://map.uniqlo.com/jp/ja/detail/10100062"]],"2026-12-07":[["🎟️ ちいかわパーク官方票券","https://chiikawapark-tokyo.jp/ticket/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]]}};let data=JSON.parse(localStorage.getItem("tokyoTrip2026_v4")||JSON.stringify(original));let dayIndex=0,editIndex=null;
 const esc=s=>String(s??"").replace(/[&<>\"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 const maps=p=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p)+"&hl=zh-TW";
+function routeMap(from,to,mode){const tm=mode==="walk"?"walking":mode==="taxi"?"driving":"transit";return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(from)+"&destination="+encodeURIComponent(to)+"&travelmode="+tm;}
+
 function save(){localStorage.setItem("tokyoTrip2026_v4",JSON.stringify(data))}
 function parseDate(date){const [y,m,d]=date.split("-").map(Number);return new Date(y,m-1,d)}
 function fmtDate(dt){return dt.toLocaleDateString("zh-TW",{year:"numeric",month:"numeric",day:"numeric",weekday:"short"})}
@@ -114,75 +119,44 @@ function searchUrl(q){return "https://www.google.com/search?q="+encodeURICompone
 function bookingLinks(item,date){const type=bookingType(item),title=item[2],base=title+" 東京";if(type==="none")return [];
  if(type==="restaurant")return [["🔍 查詢餐廳預約",searchUrl(base+" 予約 預約" )],["🌐 查詢官方網站",searchUrl(base+" 公式 official")]];
  return [["🎫 查詢門票／訂票",searchUrl(base+" チケット ticket" )],["🌐 查詢官方網站",searchUrl(base+" 公式 official")]];}
-function transportIcon(mode){return mode==='walk'?'🚶':mode==='taxi'?'🚕':'🚆'}
-function modeText(mode){return mode==='walk'?'步行':mode==='taxi'?'計程車':'大眾運輸'}
-function transportBetween(a,b,mode){
-  const fixed={
-    '池袋站|表參道':[30,'transit'],'表參道|澀谷 PARCO':[10,'transit'],'澀谷 PARCO|廻転鮨 銀座おのでら 本店':[15,'transit'],
-    '池袋站|淺草寺':[35,'transit'],'紅鶴|淺草寺':[8,'walk'],'淺草寺|東京晴空塔':[10,'transit'],'東京晴空塔|叙々苑 池袋サンシャイン通り店':[45,'transit'],
-    '叙々苑 池袋サンシャイン通り店|RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京':[8,'walk'],'池袋站|東京迪士尼樂園':[55,'transit'],
-    'RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京|琥珀 池袋 ラーメン':[10,'walk'],'RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京|Sunshine City 池袋':[10,'walk'],
-    '池袋站|銀座':[25,'transit'],'銀座|池袋站':[25,'transit'],'池袋站|Chikawa Park':[12,'walk'],'Chikawa Park|池袋站':[12,'walk'],
-    '成田國際機場|池袋站':[85,'transit'],'池袋站|成田國際機場':[85,'transit'],'桃園國際機場|成田國際機場':[240,'transit'],
-    '東京迪士尼樂園|池袋站':[55,'transit']
-  };
-  const key=a+'|'+b;
-  if(fixed[key]) return {minutes:fixed[key][0],mode:mode||fixed[key][1]};
-  const m=minutesBetween(a,b,mode||'transit');
-  return m?{minutes:m,mode:mode||'transit'}:null;
-}
-function routeCard(d,i,x,next){
-  const from=(x[10]||x[5]||x[2]||'').trim();
-  const to=(x[11]||next[5]||next[2]||'').trim();
-  if(!from||!to||from===to)return '';
-  const mode=x[12]||'transit';
-  const r=transportBetween(from,to,mode);
-  const mins=r ? r.minutes : null;
-  const routeUrl=mapRouteUrl(from,to,mode);
-  return `<div class="transport-gap compact">
-    <span class="tg-icon">${transportIcon(mode)}</span>
-    <span class="tg-label">${modeText(mode)}・${mins ? `約 ${mins} 分鐘` : '查看 Google Maps'}</span>
-    <select class="tg-mode" aria-label="交通方式" onchange="setRouteMode(${i},this.value)">
-      <option value="transit" ${mode==='transit'?'selected':''}>🚆 電車</option>
-      <option value="walk" ${mode==='walk'?'selected':''}>🚶 步行</option>
-      <option value="taxi" ${mode==='taxi'?'selected':''}>🚕 計程車</option>
-    </select>
-    <a class="tg-map" href="${routeUrl}" target="_blank" rel="noopener">📍</a>
-  </div>`;
-}
-function addTime(t,m){const p=t.split(':').map(Number);let n=p[0]*60+p[1]+m;n%=1440;return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
-function setRouteMode(i,mode){data.days[dayIndex].items[i][12]=mode;save();render()}
-function render(){tabs.innerHTML=data.days.map((d,i)=>`<button class="tab ${i===dayIndex?'active':''}" onclick="dayIndex=${i};render()">${d.label}</button>`).join("");
-let d=data.days[dayIndex];content.innerHTML=`<div class="dayhead"><h2>${d.label}｜${esc(d.title)}</h2><span class="count">${d.items.length} 個行程</span></div><div class="timeline">${d.items.map((x,i)=>{const bl=bookingLinks(x,d.date);return `<div class="item"><div class="time">${esc(x[0])}<br>↓<br>${esc(x[1])}</div><div><div class="title">${esc(x[2])}</div><span class="tag">${esc(x[3])}</span><div class="note">${esc(x[4])}</div><a class="maps" href="${maps(x[6]||x[5]||x[2])}">📍 Google Maps｜${esc(x[5]||x[2])}</a>${bl.length?`<div class="quicklinks">${bl.map(l=>`<a href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}</div><div class="actions"><button class="iconbtn" onclick="editItem(${i})">✎</button><button class="iconbtn" onclick="delItem(${i})">🗑</button></div></div>${i<d.items.length-1?routeCard(d,i,x,d.items[i+1]):''}`}).join("")}</div>`;
+function render(){
+  tabs.innerHTML=data.days.map((d,i)=>`<button class="tab ${i===dayIndex?'active':''}" onclick="dayIndex=${i};render()">${d.label}</button>`).join("");
+  let d=data.days[dayIndex];
+  const cards=d.items.map((x,i)=>{
+    const bl=bookingLinks(x,d.date);
+    if(x[3]==="交通"){
+      const mode=x[12]||"transit";
+      const from=(x[10]||"").trim(), to=(x[11]||"").trim();
+      const label=mode==="walk"?"🚶 步行":mode==="taxi"?"🚕 計程車":"🚆 電車";
+      let mins=minutesBetween(from,to,mode);
+      if(!mins){
+        // Use the existing time range for a transport row as its duration.
+        mins=(()=>{const a=(x[0]||"").split(":").map(Number),b=(x[1]||"").split(":").map(Number);if(a.length<2||b.length<2)return null;let v=(b[0]*60+b[1])-(a[0]*60+a[1]);if(v<0)v+=1440;return v;})();
+      }
+      return `<div class="transport-gap"><span class="transport-icon">${label.split(" ")[0]}</span><span>${label.slice(3)}${mins?`・約 ${mins} 分鐘`:""}</span></div>`;
+    }
+    return `<div class="item"><div class="time">${esc(x[0])}<br>↓<br>${esc(x[1])}</div><div><div class="title">${esc(x[2])}</div><span class="tag">${esc(x[3])}</span><div class="note">${esc(x[4])}</div><a class="maps" href="${maps(x[6]||x[5]||x[2])}">📍 Google Maps｜${esc(x[5]||x[2])}</a>${bl.length?`<div class="quicklinks">${bl.map(l=>`<a href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}</div><div class="actions"><button class="iconbtn" onclick="editItem(${i})">✎</button><button class="iconbtn" onclick="delItem(${i})">🗑</button></div></div>`;
+  }).join("");
+  content.innerHTML=`<div class="dayhead"><h2>${d.label}｜${esc(d.title)}</h2><span class="count">${d.items.length} 個行程</span></div><div class="timeline">${cards}</div>`;
+
 links.innerHTML=(data.links[d.date]||[]).map(l=>`<div class="linkcard"><strong>${esc(l[0])}</strong><br><a href="${esc(l[1])}">開啟預約／訂票網站 ↗</a></div>`).join("")||'<div class="note">本日沒有固定網站；上方每個需要預約的行程會自動產生查詢。</div>';
 let a=[];if(d.date==="2026-12-03")a.push("🎄 12/3 花車／夜間遊行的確切時間待官方公布。 ");if(d.date==="2026-12-07")a.push("✈️ 15:00 池袋→成田為暫估，需依航班時間鎖定車次。");notice.innerHTML=a.map(v=>`<div class="warn">${v}</div>`).join("")}
-
-function mapRouteUrl(from,to,mode){
-  const tm=mode==='walk'?'walking':mode==='taxi'?'driving':'transit';
-  return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(from)+"&destination="+encodeURIComponent(to)+"&travelmode="+tm;
-}
-function freeTextRouteMinutes(from,to,mode){
-  // No Google Maps API is embedded: the route is opened in Google Maps for the live result.
-  // Keep any existing estimate if the pair is one of the known Tokyo legs.
-  return minutesBetween(from,to,mode||'transit');
-}
+const locationChoices=()=>[];
+function fillPlaceOptions(selectedFrom='',selectedTo=''){fFrom.value=selectedFrom||'';fTo.value=selectedTo||'';}
 function autoRoute(){
-  const from=(fFrom.value||'').trim(), to=(fTo.value||'').trim(), mode=fMode.value;
+  const from=(fFrom.value||'').trim(),to=(fTo.value||'').trim(),mode=fMode.value;
   if(!from||!to)return alert('請先輸入起點與終點。');
   if(!fStart.value)return alert('請先選擇開始時間。');
-  const m=freeTextRouteMinutes(from,to,mode);
+  const m=minutesBetween(from,to,mode);
   if(m){
-    const [h,mi]=fStart.value.split(':').map(Number), total=h*60+mi+m;
+    const [h,mi]=fStart.value.split(':').map(Number),total=h*60+mi+m;
     fEnd.value=String(Math.floor((total%1440)/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0');
-    fNote.value=(fNote.value?fNote.value+'\n':'')+`Google Maps 路線：${from} → ${to}；目前先估算約 ${m} 分鐘，實際時間請以 Google Maps 即時路線為準。`;
-  } else {
-    fNote.value=(fNote.value?fNote.value+'\n':'')+`Google Maps 路線：${from} → ${to}；請開啟 Google Maps 查看即時時間。`;
   }
-  window.open(mapRouteUrl(from,to,mode),'_blank');
+  window.open(routeMap(from,to,mode),'_blank');
 }
-function addItem({editIndex=null;openModal('新增行程',['','','','自由','','','','auto','0','', '', 'transit']);}
+function addItem(){editIndex=null;openModal('新增行程',['','','','自由','','','','auto','0','', '', 'transit']);}
 function editItem(i){editIndex=i;openModal('編輯行程',data.days[dayIndex].items[i])}
-function openModal(t,x){modalTitle.textContent=t;fStart.value=x[0]||'';fEnd.value=x[1]||'';fTitle.value=x[2]||'';fCat.value=x[3]||'自由';fNote.value=x[4]||'';fPlace.value=x[5]||'';fBook.value=x[7]||'auto';fAdvance.value=x[8]||'0';fCustomDays.value=x[9]||30;fMode.value=x[12]||'transit';fFrom.value=x[10]||'';fTo.value=x[11]||'';toggleCustom();modal.classList.add('open')}
+function openModal(t,x){modalTitle.textContent=t;fStart.value=x[0]||'';fEnd.value=x[1]||'';fTitle.value=x[2]||'';fCat.value=x[3]||'自由';fNote.value=x[4]||'';fPlace.value=x[5]||'';fBook.value=x[7]||'auto';fAdvance.value=x[8]||'0';fCustomDays.value=x[9]||30;fMode.value=x[12]||'transit';fillPlaceOptions(x[10]||'',x[11]||'');toggleCustom();modal.classList.add('open')}
 function toggleCustom(){customDaysWrap.style.display=fAdvance.value==='custom'?'block':'none'}
 fAdvance.addEventListener('change',toggleCustom);
 function closeModal(){modal.classList.remove('open')}
