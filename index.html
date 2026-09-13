@@ -20,9 +20,12 @@ main{max-width:900px;margin:auto;padding:14px}.toolbar{display:flex;gap:7px;flex
 .quicklinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.quicklinks a{background:#f7efe8;border:1px solid var(--line);border-radius:8px;padding:6px 8px;color:#7d523d;text-decoration:none;font-size:11px}.link-section{margin-top:24px}.linkcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0}.linkcard a{color:var(--accent);text-decoration:none;font-size:13px}
 .modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:flex-end;justify-content:center}.modal.open{display:flex}.box{background:#fff;width:min(600px,100%);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}label{font-size:11px;color:var(--muted)}input,select,textarea{width:100%;font:inherit;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:9px}textarea{min-height:70px}.modal-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}
 @media(max-width:560px){.item{grid-template-columns:72px 1fr 25px}.actions{flex-direction:column}}
+
+.transport-gap{display:flex;align-items:center;justify-content:center;gap:6px;height:34px;margin:0;color:#777;font-size:12px;font-weight:600}
+.transport-gap .transport-icon{font-size:16px}
 </style></head>
 <body>
-<header><h1>Tokyo Trip Planner</h1><div class="sub">2026/12/2–12/7 · 手機版 PWA · 可編輯</div><div id="tabs" class="tabs"></div></header>
+<header><h1>Tokyo Trip Planner</h1><div class="sub">2026/12/2–12/7 · 手機版 PWA · 可編輯 · V1 已修正</div><div id="tabs" class="tabs"></div></header>
 <main>
 <div class="toolbar"><button class="btn primary" onclick="addItem()">＋ 新增</button><button class="btn" onclick="showReminders()">🔔 預約提醒</button><button class="btn" onclick="resetData()">恢復原始</button><button class="btn" onclick="installApp()">📱 加到主畫面</button></div>
 <div id="notice"></div><div id="content"></div>
@@ -112,10 +115,52 @@ function searchUrl(q){return "https://www.google.com/search?q="+encodeURICompone
 function bookingLinks(item,date){const type=bookingType(item),title=item[2],base=title+" 東京";if(type==="none")return [];
  if(type==="restaurant")return [["🔍 查詢餐廳預約",searchUrl(base+" 予約 預約" )],["🌐 查詢官方網站",searchUrl(base+" 公式 official")]];
  return [["🎫 查詢門票／訂票",searchUrl(base+" チケット ticket" )],["🌐 查詢官方網站",searchUrl(base+" 公式 official")]];}
+
+function transportInfo(from,to,mode){
+  const f=(from||"").trim(), t=(to||"").trim();
+  const key=f+"|"+t;
+  const routes={
+    "池袋站|表參道":30,"表參道|澀谷":10,"澀谷 PARCO|廻転鮨 銀座おのでら 本店":10,
+    "淺草寺|東京晴空塔":10,"東京晴空塔|叙々苑 池袋サンシャイン通り店":35,
+    "池袋站|淺草":35,"淺草|東京晴空塔":10,"銀座|池袋站":25,"池袋站|銀座":25,
+    "池袋站|東京迪士尼樂園":55,"東京迪士尼樂園|池袋站":55,
+    "RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京|池袋站":7,
+    "池袋站|RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京":7
+  };
+  if(routes[key]!=null) return routes[key];
+  const a=(f+" "+t);
+  if(/機場|成田|桃園/.test(a)) return 80;
+  if(/池袋/.test(f)&&/表參道|原宿/.test(t)) return 30;
+  if(/表參道|原宿/.test(f)&&/澀谷/.test(t)) return 10;
+  if(/澀谷/.test(f)&&/表參道/.test(t)) return 10;
+  if(/淺草/.test(f)&&/晴空塔/.test(t)) return 10;
+  if(/晴空塔/.test(f)&&/池袋|叙々苑/.test(t)) return 35;
+  return null;
+}
+function transportGap(x,next){
+  const from=x[5]||x[2]||"", to=next[5]||next[2]||"";
+  if(!from||!to||from===to) return "";
+  const mode=x[12]||"transit";
+  const saved=x[13];
+  const mins=saved!=null && saved!=="" ? Number(saved) : transportInfo(from,to,mode);
+  const icon=mode==="walk"?"🚶":mode==="taxi"?"🚕":"🚆";
+  const label=mode==="walk"?"步行":mode==="taxi"?"計程車":"電車";
+  return `<div class="transport-gap">
+    <span class="transport-icon">${icon}</span>
+    <span>${label}・${mins?`約 ${mins} 分鐘`:"請設定時間"}</span>
+  </div>`;
+}
 function render(){tabs.innerHTML=data.days.map((d,i)=>`<button class="tab ${i===dayIndex?'active':''}" onclick="dayIndex=${i};render()">${d.label}</button>`).join("");
-let d=data.days[dayIndex];content.innerHTML=`<div class="dayhead"><h2>${d.label}｜${esc(d.title)}</h2><span class="count">${d.items.length} 個行程</span></div><div class="timeline">${d.items.map((x,i)=>{const bl=bookingLinks(x,d.date);return `<div class="item"><div class="time">${esc(x[0])}<br>↓<br>${esc(x[1])}</div><div><div class="title">${esc(x[2])}</div><span class="tag">${esc(x[3])}</span><div class="note">${esc(x[4])}</div><a class="maps" href="${maps(x[6]||x[5]||x[2])}">📍 Google Maps｜${esc(x[5]||x[2])}</a>${bl.length?`<div class="quicklinks">${bl.map(l=>`<a href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}</div><div class="actions"><button class="iconbtn" onclick="editItem(${i})">✎</button><button class="iconbtn" onclick="delItem(${i})">🗑</button></div></div>`}).join("")}</div>`;
+let d=data.days[dayIndex];
+const cards=d.items.map((x,i)=>{
+  const bl=bookingLinks(x,d.date);
+  const card=`<div class="item"><div class="time">${esc(x[0])}<br>↓<br>${esc(x[1])}</div><div><div class="title">${esc(x[2])}</div><span class="tag">${esc(x[3])}</span><div class="note">${esc(x[4])}</div><a class="maps" href="${maps(x[6]||x[5]||x[2])}">📍 Google Maps｜${esc(x[5]||x[2])}</a>${bl.length?`<div class="quicklinks">${bl.map(l=>`<a href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}</div><div class="actions"><button class="iconbtn" onclick="editItem(${i})">✎</button><button class="iconbtn" onclick="delItem(${i})">🗑</button></div></div>`;
+  return card+(d.items[i+1]?transportGap(x,d.items[i+1]):"");
+}).join("");
+content.innerHTML=`<div class="dayhead"><h2>${d.label}｜${esc(d.title)}</h2><span class="count">${d.items.length} 個行程</span></div><div class="timeline">${cards}</div>`;
 links.innerHTML=(data.links[d.date]||[]).map(l=>`<div class="linkcard"><strong>${esc(l[0])}</strong><br><a href="${esc(l[1])}">開啟預約／訂票網站 ↗</a></div>`).join("")||'<div class="note">本日沒有固定網站；上方每個需要預約的行程會自動產生查詢。</div>';
 let a=[];if(d.date==="2026-12-03")a.push("🎄 12/3 花車／夜間遊行的確切時間待官方公布。 ");if(d.date==="2026-12-07")a.push("✈️ 15:00 池袋→成田為暫估，需依航班時間鎖定車次。");notice.innerHTML=a.map(v=>`<div class="warn">${v}</div>`).join("")}
+
 function addItem(){editIndex=null;openModal("新增行程",["","","","自由","","","","auto","0",""])}
 function editItem(i){editIndex=i;openModal("編輯行程",data.days[dayIndex].items[i])}
 function openModal(t,x){modalTitle.textContent=t;fStart.value=x[0]||"";fEnd.value=x[1]||"";fTitle.value=x[2]||"";fCat.value=x[3]||"自由";fNote.value=x[4]||"";fPlace.value=x[5]||"";fBook.value=x[7]||"auto";fAdvance.value=x[8]||"0";fCustomDays.value=x[9]||30;toggleCustom();modal.classList.add("open")}
