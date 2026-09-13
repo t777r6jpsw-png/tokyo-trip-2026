@@ -21,7 +21,7 @@ main{max-width:900px;margin:auto;padding:14px}.toolbar{display:flex;gap:7px;flex
 .modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:flex-end;justify-content:center}.modal.open{display:flex}.box{background:#fff;width:min(600px,100%);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}label{font-size:11px;color:var(--muted)}input,select,textarea{width:100%;font:inherit;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:9px}textarea{min-height:70px}.modal-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}
 @media(max-width:560px){.item{grid-template-columns:72px 1fr 25px}.actions{flex-direction:column}}
 
-.transport-between{display:flex;align-items:center;justify-content:center;gap:5px;height:34px;margin:1px 0;color:#777;font-size:13px;font-weight:600}
+.transport-between{display:flex;align-items:center;justify-content:center;gap:5px;min-height:38px;margin:0;color:#777;font-size:13px;font-weight:600}.transport-between .mode{font-size:14px}.transport-between .dur{font-weight:600}
 .transport-between span:first-child{font-size:17px}
 </style></head>
 <body>
@@ -102,10 +102,10 @@ const original={"days":[
 ["15:00","16:20","池袋 → 成田機場","交通","比原本 15:30 出發更保險；抓約 80 分鐘，抵達後還有報到與安檢緩衝。","成田國際機場","Narita International Airport"],
 ["16:20","17:00","成田機場報到／退稅準備","機場","17:00 才到機場會偏趕；建議至少 16:20 左右抵達。","成田國際機場","Narita International Airport"]
 ]}
-],"links":{"2026-12-02":[["✈️ 成田機場官方","https://www.narita-airport.jp/en/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]],"2026-12-03":[["🎫 東京迪士尼官方日曆","https://www.tokyodisneyresort.jp/tdl/daily/calendar/20261203/"],["🎭 東京迪士尼官方表演／花車時刻","https://www.tokyodisneyresort.jp/en/tdl/show/schedule/"],["🎫 東京迪士尼門票","https://www.tokyodisneyresort.jp/en/ticket/"]],"2026-12-04":[["🗼 東京晴空塔官方票券","https://www.tokyo-skytree.jp/en/ticket/"],["🍖 敘敘苑官方","https://www.jojoen.co.jp/"]],"2026-12-05":[["🍲 山笑ふ表參道｜官方線上預約","https://www.yamawarau-flavorworks.com/shabu-shabu-omotesandou"],["🍣 廻転鮨 銀座おのでら｜官方資訊","https://onodera-group.com/kaitensushi-ginza/"]],"2026-12-06":[["🛍️ 銀座 UNIQLO","https://map.uniqlo.com/jp/ja/detail/10100062"]],"2026-12-07":[["🎟️ ちいかわパーク官方票券","https://chiikawapark-tokyo.jp/ticket/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]]}};let data=JSON.parse(localStorage.getItem("tokyoTrip2026_v3")||JSON.stringify(original));let dayIndex=0,editIndex=null;
+],"links":{"2026-12-02":[["✈️ 成田機場官方","https://www.narita-airport.jp/en/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]],"2026-12-03":[["🎫 東京迪士尼官方日曆","https://www.tokyodisneyresort.jp/tdl/daily/calendar/20261203/"],["🎭 東京迪士尼官方表演／花車時刻","https://www.tokyodisneyresort.jp/en/tdl/show/schedule/"],["🎫 東京迪士尼門票","https://www.tokyodisneyresort.jp/en/ticket/"]],"2026-12-04":[["🗼 東京晴空塔官方票券","https://www.tokyo-skytree.jp/en/ticket/"],["🍖 敘敘苑官方","https://www.jojoen.co.jp/"]],"2026-12-05":[["🍲 山笑ふ表參道｜官方線上預約","https://www.yamawarau-flavorworks.com/shabu-shabu-omotesandou"],["🍣 廻転鮨 銀座おのでら｜官方資訊","https://onodera-group.com/kaitensushi-ginza/"]],"2026-12-06":[["🛍️ 銀座 UNIQLO","https://map.uniqlo.com/jp/ja/detail/10100062"]],"2026-12-07":[["🎟️ ちいかわパーク官方票券","https://chiikawapark-tokyo.jp/ticket/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]]}};let data=JSON.parse(localStorage.getItem("tokyoTrip2026_v1_transport")||JSON.stringify(original));let dayIndex=0,editIndex=null;
 const esc=s=>String(s??"").replace(/[&<>\"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 const maps=p=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p)+"&hl=zh-TW";
-function save(){localStorage.setItem("tokyoTrip2026_v3",JSON.stringify(data))}
+function save(){localStorage.setItem("tokyoTrip2026_v1_transport",JSON.stringify(data))}
 function parseDate(date){const [y,m,d]=date.split("-").map(Number);return new Date(y,m-1,d)}
 function fmtDate(dt){return dt.toLocaleDateString("zh-TW",{year:"numeric",month:"numeric",day:"numeric",weekday:"short"})}
 function reminderDate(date,rule,custom){let dt=parseDate(date);if(rule==="month")dt.setMonth(dt.getMonth()-1);else if(rule&&rule!=="0")dt.setDate(dt.getDate()-Number(rule));return dt}
@@ -149,16 +149,37 @@ function betweenTransport(from,to){
   };
   return R[key] ?? null;
 }
+function transportMode(x){
+  const t=(x[2]||"").toLowerCase();
+  if(/搭機|飛機|航班|成田機場報到/.test(t)) return "✈️ 飛機";
+  if(/計程車|計程|搭車|開車|車程|桃園機場/.test(t)) return "🚕 車程";
+  if(/步行|走路|回飯店|取行李|前往池袋站/.test(t)) return "🚶 步行";
+  return "🚆 電車";
+}
+function durationMinutes(x){
+  const p=s=>{const a=String(s).split(":").map(Number);return a[0]*60+a[1]};
+  let n=p(x[1])-p(x[0]); if(n<0)n+=1440; return n;
+}
+function transportRow(x){
+  const mins=durationMinutes(x);
+  if(!mins) return "";
+  return `<div class="transport-between"><span class="mode">${transportMode(x)}</span><span>｜</span><span class="dur">約 ${mins} 分鐘</span></div>`;
+}
 function betweenTransportRow(x,next){
-  if(!x||!next) return "";
-  if(x[3]==="交通" || next[3]==="交通") return "";
+  if(!x||!next || x[3]==="交通" || next[3]==="交通") return "";
   const from=x[5]||x[2]||"", to=next[5]||next[2]||"";
   const mins=betweenTransport(from,to);
   if(mins===null || mins===0) return "";
-  return `<div class="transport-between"><span>🚆</span><strong>電車</strong><span>・</span><strong>約 ${mins} 分鐘</strong></div>`;
+  return `<div class="transport-between"><span class="mode">🚆 電車</span><span>｜</span><span class="dur">約 ${mins} 分鐘</span></div>`;
 }
-function render(){tabs.innerHTML=data.days.map((d,i)=>`<button class="tab ${i===dayIndex?'active':''}" onclick="dayIndex=${i};render()">${d.label}</button>`).join("");
-let d=data.days[dayIndex];content.innerHTML=`<div class="dayhead"><h2>${d.label}｜${esc(d.title)}</h2><span class="count">${d.items.length} 個行程</span></div><div class="timeline">${d.items.map((x,i)=>{const bl=bookingLinks(x,d.date);return `<div class="item"><div class="time">${esc(x[0])}<br>↓<br>${esc(x[1])}</div><div><div class="title">${esc(x[2])}</div><span class="tag">${esc(x[3])}</span><div class="note">${esc(x[4])}</div><a class="maps" href="${maps(x[6]||x[5]||x[2])}">📍 Google Maps｜${esc(x[5]||x[2])}</a>${bl.length?`<div class="quicklinks">${bl.map(l=>`<a href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}</div><div class="actions"><button class="iconbtn" onclick="editItem(${i})">✎</button><button class="iconbtn" onclick="delItem(${i})">🗑</button></div></div>`+(d.items[i+1]?betweenTransportRow(x,d.items[i+1]):"")}).join("")}</div>`;
+function render(){
+tabs.innerHTML=data.days.map((d,i)=>`<button class="tab ${i===dayIndex?'active':''}" onclick="dayIndex=${i};render()">${d.label}</button>`).join("");
+let d=data.days[dayIndex], visible=d.items.filter(x=>x[3]!=="交通");
+content.innerHTML=`<div class="dayhead"><h2>${d.label}｜${esc(d.title)}</h2><span class="count">${visible.length} 個行程</span></div><div class="timeline">${d.items.map((x,i)=>{
+  if(x[3]==="交通") return transportRow(x);
+  const bl=bookingLinks(x,d.date);
+  return `<div class="item"><div class="time">${esc(x[0])}<br>↓<br>${esc(x[1])}</div><div><div class="title">${esc(x[2])}</div><span class="tag">${esc(x[3])}</span><div class="note">${esc(x[4])}</div><a class="maps" href="${maps(x[6]||x[5]||x[2])}">📍 Google Maps｜${esc(x[5]||x[2])}</a>${bl.length?`<div class="quicklinks">${bl.map(l=>`<a href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}</div><div class="actions"><button class="iconbtn" onclick="editItem(${i})">✎</button><button class="iconbtn" onclick="delItem(${i})">🗑</button></div></div>`+(d.items[i+1]?betweenTransportRow(x,d.items[i+1]):"");
+}).join("")}</div>`;
 links.innerHTML=(data.links[d.date]||[]).map(l=>`<div class="linkcard"><strong>${esc(l[0])}</strong><br><a href="${esc(l[1])}">開啟預約／訂票網站 ↗</a></div>`).join("")||'<div class="note">本日沒有固定網站；上方每個需要預約的行程會自動產生查詢。</div>';
 let a=[];if(d.date==="2026-12-03")a.push("🎄 12/3 花車／夜間遊行的確切時間待官方公布。 ");if(d.date==="2026-12-07")a.push("✈️ 15:00 池袋→成田為暫估，需依航班時間鎖定車次。");notice.innerHTML=a.map(v=>`<div class="warn">${v}</div>`).join("")}
 function addItem(){editIndex=null;openModal("新增行程",["","","","自由","","","","auto","0",""])}
