@@ -20,9 +20,53 @@ main{max-width:900px;margin:auto;padding:14px}.toolbar{display:flex;gap:7px;flex
 .quicklinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.quicklinks a{background:#f7efe8;border:1px solid var(--line);border-radius:8px;padding:6px 8px;color:#7d523d;text-decoration:none;font-size:11px}.link-section{margin-top:24px}.linkcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0}.linkcard a{color:var(--accent);text-decoration:none;font-size:13px}
 .modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:flex-end;justify-content:center}.modal.open{display:flex}.box{background:#fff;width:min(600px,100%);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}label{font-size:11px;color:var(--muted)}input,select,textarea{width:100%;font:inherit;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:9px}textarea{min-height:70px}.modal-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}.routehint{grid-column:1/-1;background:var(--green);border-radius:9px;padding:8px;font-size:11px;color:#27623c}
 @media(max-width:560px){.item{grid-template-columns:72px 1fr 25px}.actions{flex-direction:column}}
-.transport-gap{display:flex;align-items:center;gap:10px;margin:8px 6px 10px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;background:#fbfaf7}.transport-gap .tg-line{flex:1;min-width:0}.transport-gap .tg-title{font-size:13px;font-weight:700}.transport-gap .tg-meta{font-size:12px;color:var(--muted);margin-top:3px}.transport-gap select{border:1px solid var(--line);border-radius:10px;background:#fff;padding:6px 8px;font-size:12px}.transport-gap button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 9px;font-size:12px}.transport-gap .tg-icon{font-size:18px}</style></head>
+.transport-gap{display:flex;align-items:center;gap:10px;margin:8px 6px 10px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;background:#fbfaf7}.transport-gap .tg-line{flex:1;min-width:0}.transport-gap .tg-title{font-size:13px;font-weight:700}.transport-gap .tg-meta{font-size:12px;color:var(--muted);margin-top:3px}.transport-gap select{border:1px solid var(--line);border-radius:10px;background:#fff;padding:6px 8px;font-size:12px}.transport-gap button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 9px;font-size:12px}.transport-gap .tg-icon{font-size:18px}
+/* V8 行程間交通：只顯示交通方式＋分鐘 */
+.transport-gap.compact{
+  margin:10px 12px;
+  min-height:48px;
+  padding:8px 12px;
+  border:1px dashed #d9d1c8;
+  border-radius:14px;
+  background:#fffdf9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-sizing:border-box;
+}
+.transport-gap.compact .tg-icon{font-size:22px;flex:0 0 auto}
+.transport-gap.compact .tg-info{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  font-size:15px;
+  color:#555;
+  white-space:nowrap;
+}
+.transport-gap.compact .tg-mode{
+  width:auto;
+  max-width:105px;
+  min-height:34px;
+  padding:4px 8px;
+  border:1px solid #e2dbd3;
+  border-radius:10px;
+  background:#fff;
+  font-size:14px;
+}
+.transport-gap.compact .tg-map{
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;
+  background:#eef7ef;
+  text-decoration:none;
+  font-size:18px;
+  flex:0 0 auto;
+}
+</style></head>
 <body>
-<header><h1>Tokyo Trip Planner</h1><div class="sub">2026/12/2–12/7 · 手機版 PWA · 可編輯 · V7</div><div id="tabs" class="tabs"></div></header>
+<header><h1>Tokyo Trip Planner</h1><div class="sub">2026/12/2–12/7 · 手機版 PWA · 可編輯 · V8</div><div id="tabs" class="tabs"></div></header>
 <main>
 <div class="toolbar"><button class="btn primary" onclick="addItem()">＋ 新增</button><button class="btn" onclick="showReminders()">🔔 預約提醒</button><button class="btn" onclick="resetData()">恢復原始</button><button class="btn" onclick="installApp()">📱 加到主畫面</button></div>
 <div id="notice"></div><div id="content"></div>
@@ -138,34 +182,21 @@ function routeCard(d,i,x,next){
   const mode=x[12]||'transit';
   const r=transportBetween(from,to,mode);
   const routeUrl=mapRouteUrl(from,to,mode);
-  if(!r){
-    return `<div class="transport-gap">
-      <div class="tg-icon">${transportIcon(mode)}</div>
-      <div class="tg-line">
-        <div class="tg-title">${esc(from)} → ${esc(to)}</div>
-        <div class="tg-meta">請用 Google Maps 查看即時路線與通勤時間</div>
-        <a class="maps" href="${routeUrl}" target="_blank" rel="noopener">📍 Google Maps 路線</a>
-      </div>
-      <select onchange="setRouteMode(${i},this.value)">
-        <option value="transit" ${mode==='transit'?'selected':''}>🚆 電車</option>
-        <option value="walk" ${mode==='walk'?'selected':''}>🚶 步行</option>
-        <option value="taxi" ${mode==='taxi'?'selected':''}>🚕 計程車</option>
-      </select>
-    </div>`;
-  }
-  const start=x[1]||''; const end=start?addTime(start,r.minutes):'';
-  return `<div class="transport-gap">
-    <div class="tg-icon">${transportIcon(r.mode)}</div>
-    <div class="tg-line">
-      <div class="tg-title">${esc(from)} → ${esc(to)}</div>
-      <div class="tg-meta">${modeText(r.mode)} ・ 約 ${r.minutes} 分鐘${start?` ・ ${esc(start)} → ${esc(end)}`:''}</div>
-      <a class="maps" href="${routeUrl}" target="_blank" rel="noopener">📍 Google Maps 路線</a>
+  const mins=r ? r.minutes : null;
+  const label = mins ? `約 ${mins} 分鐘` : `時間請查看 Google Maps`;
+  return `<div class="transport-gap compact">
+    <div class="tg-icon">${transportIcon(mode)}</div>
+    <div class="tg-info">
+      <strong>${modeText(mode)}</strong>
+      <span>・</span>
+      <strong>${label}</strong>
     </div>
-    <select onchange="setRouteMode(${i},this.value)">
-      <option value="transit" ${r.mode==='transit'?'selected':''}>🚆 電車</option>
-      <option value="walk" ${r.mode==='walk'?'selected':''}>🚶 步行</option>
-      <option value="taxi" ${r.mode==='taxi'?'selected':''}>🚕 計程車</option>
+    <select class="tg-mode" aria-label="交通方式" onchange="setRouteMode(${i},this.value)">
+      <option value="transit" ${mode==='transit'?'selected':''}>🚆 電車</option>
+      <option value="walk" ${mode==='walk'?'selected':''}>🚶 步行</option>
+      <option value="taxi" ${mode==='taxi'?'selected':''}>🚕 計程車</option>
     </select>
+    <a class="tg-map" href="${routeUrl}" target="_blank" rel="noopener" aria-label="Google Maps 路線">📍</a>
   </div>`;
 }
 function addTime(t,m){const p=t.split(':').map(Number);let n=p[0]*60+p[1]+m;n%=1440;return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
