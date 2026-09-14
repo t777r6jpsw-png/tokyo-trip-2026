@@ -1,199 +1,114 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#9a6a4e">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
-<title>Tokyo Trip Planner 2026</title>
-<style>
-:root{--bg:#f7f4ef;--card:#fff;--ink:#252525;--muted:#777;--line:#e7dfd5;--accent:#9a6a4e;--soft:#f2e8df;--green:#e7f2e9;--yellow:#fff4d6}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}
-header{background:rgba(255,255,255,.96);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20;padding:calc(14px + env(safe-area-inset-top)) 14px 12px;border-bottom:1px solid var(--line)}
-h1{font-size:22px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:3px}
-.tabs{display:flex;gap:7px;overflow-x:auto;padding-top:12px}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;white-space:nowrap;font-size:13px}.tab.active{background:var(--ink);color:#fff}
-main{max-width:900px;margin:auto;padding:14px}.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;font-size:13px}.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.dayhead{display:flex;justify-content:space-between;align-items:flex-end;margin:8px 2px 12px}.dayhead h2{font-size:20px;margin:0}.count{font-size:12px;color:var(--muted)}
-.warn{background:var(--yellow);border:1px solid #eed58c;border-radius:12px;padding:11px 12px;font-size:12px;line-height:1.55;margin-bottom:10px}
-.timeline{display:grid;gap:9px}.item{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:12px;display:grid;grid-template-columns:82px 1fr auto;gap:10px}.time{font-size:13px;font-weight:700;line-height:1.45}.title{font-weight:700;font-size:15px;line-height:1.4}.tag{display:inline-block;background:var(--soft);border-radius:6px;padding:3px 6px;font-size:10px;margin-top:5px}.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:5px}.maps{display:inline-flex;margin-top:8px;background:var(--green);border-radius:8px;padding:7px 9px;color:#27623c;text-decoration:none;font-size:11px}.actions{display:flex;gap:3px}.iconbtn{border:0;background:transparent;font-size:16px;padding:3px}
-.quicklinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.quicklinks a{background:#f7efe8;border:1px solid var(--line);border-radius:8px;padding:6px 8px;color:#7d523d;text-decoration:none;font-size:11px}.link-section{margin-top:24px}.linkcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0}.linkcard a{color:var(--accent);text-decoration:none;font-size:13px}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:flex-end;justify-content:center}.modal.open{display:flex}.box{background:#fff;width:min(600px,100%);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}label{font-size:11px;color:var(--muted)}input,select,textarea{width:100%;font:inherit;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:9px}textarea{min-height:70px}.modal-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}
-@media(max-width:560px){.item{grid-template-columns:72px 1fr 25px}.actions{flex-direction:column}}
-
-.transport-between{display:flex;align-items:center;justify-content:center;gap:5px;min-height:38px;margin:0;color:#777;font-size:13px;font-weight:600}.transport-between .mode{font-size:14px}.transport-between .dur{font-weight:600}
-.transport-between span:first-child{font-size:17px}
-</style></head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1f33">
+  <meta name="description" content="東京六日自由行：每日行程、交通、地圖與票券整理。">
+  <title>東京六日手帖｜2026.12.02–12.07</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230b1f33'/%3E%3Cpath d='M13 42c10-2 13-19 23-19s8 12 15 11' fill='none' stroke='%23ff5b45' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='15' cy='42' r='5' fill='%23f7f1e7'/%3E%3Ccircle cx='51' cy='34' r='5' fill='%23f7f1e7'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
 <body>
-<header><h1>Tokyo Trip Planner</h1><div class="sub">2026/12/2–12/7 · 手機版 PWA · 可編輯 · V1交通修正版</div><div id="tabs" class="tabs"></div></header>
-<main>
-<div class="toolbar"><button class="btn primary" onclick="addItem()">＋ 新增</button><button class="btn" onclick="showReminders()">🔔 預約提醒</button><button class="btn" onclick="resetData()">恢復原始</button><button class="btn" onclick="installApp()">📱 加到主畫面</button></div>
-<div id="notice"></div><div id="content"></div>
-<div class="link-section"><h3>🔗 本日訂票／預約</h3><div id="links"></div></div>
-</main>
-<div id="modal" class="modal"><div class="box"><h3 id="modalTitle">新增行程</h3><div class="grid">
-<label>開始<input id="fStart" type="time"></label><label>結束<input id="fEnd" type="time"></label>
-<label class="full">行程<input id="fTitle"></label><label>類別<select id="fCat"><option>交通</option><option>美食</option><option>景點</option><option>購物</option><option>迪士尼</option><option>住宿</option><option>機場</option><option>自由</option></select></label>
-<label>Google Maps 地點<input id="fPlace"></label><label>預約／票券<select id="fBook"><option value="auto">自動判斷</option><option value="restaurant">餐廳預約</option><option value="ticket">門票／票券</option><option value="none">不用預約</option></select></label><label>提前提醒<select id="fAdvance"><option value="0">不提醒</option><option value="month">1 個月前</option><option value="60">60 天前</option><option value="30">30 天前</option><option value="14">14 天前</option><option value="7">7 天前</option><option value="custom">自訂天數</option></select></label><label id="customDaysWrap" style="display:none">提前幾天<input id="fCustomDays" type="number" min="1" max="365" value="30"></label><label class="full">備註<textarea id="fNote"></textarea></label>
-</div><div class="modal-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="saveItem()">儲存</button></div></div></div>
-<div id="reminderModal" class="modal"><div class="box"><h3>🔔 預約／訂票提醒</h3><div id="reminderList"></div><div class="modal-actions"><button class="btn primary" onclick="closeReminder()">完成</button></div></div></div>
-<script>
-const original={"days":[
-{"date":"2026-12-02","label":"12/2","title":"抵達東京｜池袋","items":[
-["04:00","05:00","板橋出發 → 桃園機場","交通","建議搭車直達機場，預留約 60 分鐘。","桃園國際機場","Taoyuan International Airport"],
-["06:40","10:40","搭機 → 成田機場","交通","10:40 抵達；入境、行李與走到車站需要時間。","成田國際機場","Narita International Airport"],
-["10:40","12:00","成田機場入境／取行李 → 車站","交通","原本 10:40→11:15 只有 35 分鐘太緊；改抓約 80 分鐘較安心。","成田國際機場","Narita International Airport"],
-["12:00","13:25","成田 → 池袋","交通","以機場鐵路＋市區轉乘抓約 1 小時 20～30 分鐘，並保留轉乘緩衝。","池袋站","Ikebukuro Station Tokyo"],
-["13:25","13:45","池袋飯店放行李","住宿","先寄放行李即可；飯店正式入住時間另依住宿規定。","RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京","1 Chome-5-3 Ikebukuro, Toshima City, Tokyo 170-0014, Japan"],
-["13:45","14:30","琥珀拉麵","美食","抵達第一天不建議排太緊，預留排隊與吃飯時間。","琥珀 池袋 ラーメン","Kohaku ramen Ikebukuro"],
-["14:40","18:00","Sunshine City 太陽城逛街","購物","從池袋飯店前往很方便；可依體力提早回飯店。","Sunshine City 池袋","Sunshine City Tokyo"],
-["18:00","19:30","晚餐／池袋自由活動","自由","第一天保留彈性，若班機或入境延誤可直接壓縮這段。","池袋站","Ikebukuro Station Tokyo"]
-]},
-{"date":"2026-12-03","label":"12/3","title":"東京迪士尼樂園","items":[
-["06:00","06:30","起床／整理","住宿","","東京迪士尼樂園","Tokyo Disneyland"],
-["06:55","08:05","池袋 → 東京迪士尼","交通","官方資料：池袋到東京迪士尼搭電車約 55 分鐘；再加步行與轉乘緩衝，抓約 70 分鐘。","東京迪士尼樂園","Tokyo Disneyland"],
-["08:05","09:00","園區外排隊／入園準備","迪士尼","09:00 開園，提早抵達比原本 08:07 更合理。","東京迪士尼樂園","Tokyo Disneyland"],
-["09:00","12:00","東京迪士尼樂園","迪士尼","12 月為 Disney Christmas 活動期間。","東京迪士尼樂園","Tokyo Disneyland"],
-["12:00","13:00","午餐","美食","建議避開熱門時段前後彈性用餐。","東京迪士尼樂園","Tokyo Disneyland"],
-["13:00","16:30","園區遊玩","迪士尼","花車時間尚未公布；以官方公告為準。","東京迪士尼樂園","Tokyo Disneyland"],
-["16:30","18:30","園區遊玩／拍照","迪士尼","","東京迪士尼樂園","Tokyo Disneyland"],
-["18:30","19:15","晚餐","美食","","東京迪士尼樂園","Tokyo Disneyland"],
-["19:15","21:00","夜間遊行／自由活動","迪士尼","12/3 的 Electrical Parade 具體時間待官方公布。","東京迪士尼樂園","Tokyo Disneyland"]
-]},
-{"date":"2026-12-04","label":"12/4","title":"淺草寺｜紅鶴｜晴空塔｜敘敘苑","items":[
-["05:00","05:40","飯店 → 淺草／紅鶴","交通","池袋出發抓約 35～40 分鐘。","紅鶴","Benitsuru Asakusa"],
-["05:40","07:00","紅鶴鬆餅排隊／取整理券","美食","目前資料顯示紅鶴早上 7:00 左右開始整理券；熱門日常需提早排隊。","紅鶴","Benitsuru Asakusa"],
-["07:00","08:30","淺草寺／雷門周邊","景點","12 月本堂開堂時間為 06:30；此時段適合避開白天人潮。","淺草寺","Sensoji Temple Tokyo"],
-["08:30","09:45","淺草散步／咖啡","自由","保留彈性等待紅鶴指定時間。","淺草","Asakusa Tokyo"],
-["09:45","10:30","紅鶴鬆餅","美食","實際入店時間以當天取得的整理券為準；若拿到更晚時段，這段可往後移。","紅鶴","Benitsuru Asakusa"],
-["10:30","12:30","淺草周邊逛街","景點","可逛仲見世、雷門與周邊商店。","淺草寺","Sensoji Temple Tokyo"],
-["12:30","13:30","移動／休息","自由","前往晴空塔一帶並預留轉乘緩衝。","東京晴空塔","Tokyo Skytree"],
-["14:00","17:00","東京晴空塔／Solamachi","景點","展望台若已預約，建議至少提早 15～20 分鐘抵達。","東京晴空塔","Tokyo Skytree"],
-["17:00","17:45","晴空塔 → 池袋／敘敘苑","交通","預留約 45 分鐘，避免 18:00 訂位遲到。","叙々苑 池袋サンシャイン通り店","Jojoen Ikebukuro Sunshine"],
-["18:00","19:30","敘敘苑","美食","已訂位；若你的訂位是池袋 Sunshine 通り店，從飯店約步行 5 分鐘。","叙々苑 池袋サンシャイン通り店","Jojoen Ikebukuro Sunshine"],
-["19:30","20:00","回飯店","交通","","RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京","1 Chome-5-3 Ikebukuro, Toshima City, Tokyo 170-0014, Japan"],
-["20:00","21:00","休息","住宿","","池袋站","Ikebukuro Station Tokyo"]
-]},
-{"date":"2026-12-05","label":"12/5","title":"原宿｜表參道｜澀谷","items":[
-["09:00","09:40","飯店 → 原宿／表參道","交通","抓約 30～40 分鐘，含走到車站與轉乘。","表參道","Omotesando Tokyo"],
-["09:40","10:50","表參道散步／店鋪","購物","","表參道","Omotesando Tokyo"],
-["11:00","12:30","しゃぶしゃぶ 山笑ふ 表參道店","美食","只訂座位；官方營業時間可支援 11:00 午餐。","しゃぶしゃぶ 山笑ふ 表参道店","Shabu Shabu Yamawarau Omotesando"],
-["12:30","13:20","表參道逛街","購物","","表參道","Omotesando Tokyo"],
-["13:30","16:50","澀谷 PARCO → 9090","購物","保留約 20 分鐘移動／排隊緩衝。","渋谷PARCO","Shibuya PARCO"],
-["16:50","17:20","澀谷 PARCO → 表參道","交通","提早離開 PARCO，避免 17:30 候位太趕。","廻転鮨 銀座おのでら 本店","Kaiten Sushi Ginza Onodera HONTEN"],
-["17:30","19:00","廻転鮨 銀座おのでら 本店","美食","2 人；目前資料顯示一般座位不接受預約，建議現場候位。","廻転鮨 銀座おのでら 本店","Kaiten Sushi Ginza Onodera HONTEN"],
-["19:00","20:00","表參道／池袋自由活動","自由","","表參道","Omotesando Tokyo"]
-]},
-{"date":"2026-12-06","label":"12/6","title":"銀座購物","items":[
-["09:00","09:40","飯店 → 銀座","交通","抓約 30～40 分鐘，含走路與轉乘。","銀座","Ginza Tokyo"],
-["10:00","12:00","銀座 UNIQLO","購物","","ユニクロ 銀座店","UNIQLO Ginza Tokyo"],
-["12:00","13:00","午餐","美食","可新增。","銀座","Ginza Tokyo"],
-["13:00","17:00","銀座逛街／百貨","購物","可新增品牌與店鋪。","銀座","Ginza Tokyo"],
-["17:00","18:30","晚餐","美食","","銀座","Ginza Tokyo"],
-["18:30","20:00","銀座夜景／自由活動","自由","","銀座","Ginza Tokyo"]
-]},
-{"date":"2026-12-07","label":"12/7","title":"退房｜池袋｜Chikawa Park｜成田機場","items":[
-["09:00","10:00","整理行李／早餐","住宿","","RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京","1 Chome-5-3 Ikebukuro, Toshima City, Tokyo 170-0014, Japan"],
-["11:00","11:15","退房","住宿","先完成退房，再把行李寄放飯店。","RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京","1 Chome-5-3 Ikebukuro, Toshima City, Tokyo 170-0014, Japan"],
-["11:20","12:20","池袋無敵家拉麵","美食","熱門店建議預留排隊時間。","無敵家 池袋","Mutekiya Ikebukuro"],
-["12:30","14:00","Chikawa Park","景點","就在 Sunshine City Annex；目前官方營業 10:00～19:00，最終入場 17:40。","ちいかわパーク","Chiikawa Park Tokyo"],
-["14:00","14:30","回飯店取行李","交通","Chikawa Park 位於池袋 Sunshine City 一帶，回飯店取行李較順路。","RUTiLE IKEBUKURO TOKYO｜ルチル池袋東京","1 Chome-5-3 Ikebukuro, Toshima City, Tokyo 170-0014, Japan"],
-["14:30","14:50","取行李／前往池袋站","交通","預留走路與拿行李時間。","池袋站","Ikebukuro Station Tokyo"],
-["15:00","16:20","池袋 → 成田機場","交通","比原本 15:30 出發更保險；抓約 80 分鐘，抵達後還有報到與安檢緩衝。","成田國際機場","Narita International Airport"],
-["16:20","17:00","成田機場報到／退稅準備","機場","17:00 才到機場會偏趕；建議至少 16:20 左右抵達。","成田國際機場","Narita International Airport"]
-]}
-],"links":{"2026-12-02":[["✈️ 成田機場官方","https://www.narita-airport.jp/en/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]],"2026-12-03":[["🎫 東京迪士尼官方日曆","https://www.tokyodisneyresort.jp/tdl/daily/calendar/20261203/"],["🎭 東京迪士尼官方表演／花車時刻","https://www.tokyodisneyresort.jp/en/tdl/show/schedule/"],["🎫 東京迪士尼門票","https://www.tokyodisneyresort.jp/en/ticket/"]],"2026-12-04":[["🗼 東京晴空塔官方票券","https://www.tokyo-skytree.jp/en/ticket/"],["🍖 敘敘苑官方","https://www.jojoen.co.jp/"]],"2026-12-05":[["🍲 山笑ふ表參道｜官方線上預約","https://www.yamawarau-flavorworks.com/shabu-shabu-omotesandou"],["🍣 廻転鮨 銀座おのでら｜官方資訊","https://onodera-group.com/kaitensushi-ginza/"]],"2026-12-06":[["🛍️ 銀座 UNIQLO","https://map.uniqlo.com/jp/ja/detail/10100062"]],"2026-12-07":[["🎟️ ちいかわパーク官方票券","https://chiikawapark-tokyo.jp/ticket/"],["🚆 JR East／N'EX 成田特快","https://www.jreast.co.jp/multi/en/nex/"],["🚆 Keisei Skyliner 官方","https://www.keisei.co.jp/keisei/tetudou/skyliner/us/"]]}};let data=JSON.parse(localStorage.getItem("tokyoTrip2026_v1_transport")||JSON.stringify(original));let dayIndex=0,editIndex=null;
-const esc=s=>String(s??"").replace(/[&<>\"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
-const maps=p=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p)+"&hl=zh-TW";
-function save(){localStorage.setItem("tokyoTrip2026_v1_transport",JSON.stringify(data))}
-function parseDate(date){const [y,m,d]=date.split("-").map(Number);return new Date(y,m-1,d)}
-function fmtDate(dt){return dt.toLocaleDateString("zh-TW",{year:"numeric",month:"numeric",day:"numeric",weekday:"short"})}
-function reminderDate(date,rule,custom){let dt=parseDate(date);if(rule==="month")dt.setMonth(dt.getMonth()-1);else if(rule&&rule!=="0")dt.setDate(dt.getDate()-Number(rule));return dt}
-function inferBooking(title,cat){const t=(title+" "+cat).toLowerCase();if(cat==="美食"||/餐廳|拉麵|壽司|壽喜燒|燒肉|火鍋|鬆餅|咖啡|食堂|restaurant|sushi|ramen|yakiniku/.test(t))return "restaurant";if(cat==="景點"||cat==="迪士尼"||/門票|展望台|樂園|disney|skytree|park|museum|ticket/.test(t))return "ticket";return "none"}
-function bookingType(x){return x[7]&&x[7]!=="auto"?x[7]:inferBooking(x[2],x[3])}
-function searchUrl(q){return "https://www.google.com/search?q="+encodeURIComponent(q)+"&hl=zh-TW"}
-function bookingLinks(item,date){const type=bookingType(item),title=item[2],base=title+" 東京";if(type==="none")return [];
- if(type==="restaurant")return [["🔍 查詢餐廳預約",searchUrl(base+" 予約 預約" )],["🌐 查詢官方網站",searchUrl(base+" 公式 official")]];
- return [["🎫 查詢門票／訂票",searchUrl(base+" チケット ticket" )],["🌐 查詢官方網站",searchUrl(base+" 公式 official")]];}
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="回到頁首">
+      <span class="brand-mark" aria-hidden="true">東</span>
+      <span>東京六日手帖</span>
+    </a>
+    <div class="top-actions">
+      <span class="save-state" id="saveState" aria-live="polite">已儲存在這台裝置</span>
+      <button class="ghost-button compact" id="exportButton" type="button">備份</button>
+      <button class="ghost-button compact" id="importButton" type="button">匯入</button>
+      <button class="ghost-button compact" id="resetButton" type="button">恢復原始</button>
+      <input id="importFile" type="file" accept="application/json" hidden>
+    </div>
+  </header>
 
-function betweenTransport(from,to){
-  const f=(from||"").trim(), t=(to||"").trim();
-  const key=f+"|"+t;
-  const R={
-    "池袋飯店|琥珀拉麵":5,
-    "琥珀拉麵|Sunshine City 太陽城逛街":10,
-    "池袋飯店|池袋站":5,
-    "池袋 → 東京迪士尼|東京迪士尼樂園":0,
-    "紅鶴鬆餅|淺草寺／雷門周邊":8,
-    "淺草寺／雷門周邊|淺草散步／咖啡":5,
-    "淺草散步／咖啡|紅鶴鬆餅":5,
-    "紅鶴鬆餅|淺草周邊逛街":5,
-    "淺草周邊逛街|移動／休息":10,
-    "移動／休息|東京晴空塔／Solamachi":20,
-    "東京晴空塔／Solamachi|叙々苑 池袋サンシャイン通り店":35,
-    "飯店 → 原宿／表參道|表參道散步／店鋪":5,
-    "表參道散步／店鋪|しゃぶしゃぶ 山笑ふ 表參道店":5,
-    "しゃぶしゃぶ 山笑ふ 表參道店|表參道逛街":5,
-    "表參道逛街|澀谷 PARCO → 9090":15,
-    "澀谷 PARCO → 9090|澀谷 PARCO → 表參道":15,
-    "澀谷 PARCO → 表參道|廻転鮨 銀座おのでら 本店":10,
-    "飯店 → 銀座|銀座 UNIQLO":5,
-    "銀座 UNIQLO|午餐":5,
-    "午餐|銀座逛街／百貨":5,
-    "銀座逛街／百貨|晚餐":5,
-    "晚餐|銀座夜景／自由活動":5,
-    "整理行李／早餐|退房":0,
-    "退房|池袋無敵家拉麵":5,
-    "池袋無敵家拉麵|Chikawa Park":8,
-    "Chikawa Park|回飯店取行李":8
-  };
-  return R[key] ?? null;
-}
-function transportMode(x){
-  const t=(x[2]||"").toLowerCase();
-  if(/搭機|飛機|航班|成田機場報到/.test(t)) return "✈️ 飛機";
-  if(/計程車|計程|搭車|開車|車程|桃園機場/.test(t)) return "🚕 車程";
-  if(/步行|走路|回飯店|取行李|前往池袋站/.test(t)) return "🚶 步行";
-  return "🚆 電車";
-}
-function durationMinutes(x){
-  const p=s=>{const a=String(s).split(":").map(Number);return a[0]*60+a[1]};
-  let n=p(x[1])-p(x[0]); if(n<0)n+=1440; return n;
-}
-function transportRow(x){
-  const mins=durationMinutes(x);
-  if(!mins) return "";
-  return `<div class="transport-between"><span class="mode">${transportMode(x)}</span><span>｜</span><span class="dur">約 ${mins} 分鐘</span></div>`;
-}
-function betweenTransportRow(x,next){
-  if(!x||!next || x[3]==="交通" || next[3]==="交通") return "";
-  const from=x[5]||x[2]||"", to=next[5]||next[2]||"";
-  const mins=betweenTransport(from,to);
-  if(mins===null || mins===0) return "";
-  return `<div class="transport-between"><span class="mode">🚆 電車</span><span>｜</span><span class="dur">約 ${mins} 分鐘</span></div>`;
-}
-function render(){
-tabs.innerHTML=data.days.map((d,i)=>`<button class="tab ${i===dayIndex?'active':''}" onclick="dayIndex=${i};render()">${d.label}</button>`).join("");
-let d=data.days[dayIndex], visible=d.items.filter(x=>x[3]!=="交通");
-content.innerHTML=`<div class="dayhead"><h2>${d.label}｜${esc(d.title)}</h2><span class="count">${visible.length} 個行程</span></div><div class="timeline">${d.items.map((x,i)=>{
-  if(x[3]==="交通") return transportRow(x);
-  const bl=bookingLinks(x,d.date);
-  return `<div class="item"><div class="time">${esc(x[0])}<br>↓<br>${esc(x[1])}</div><div><div class="title">${esc(x[2])}</div><span class="tag">${esc(x[3])}</span><div class="note">${esc(x[4])}</div><a class="maps" href="${maps(x[6]||x[5]||x[2])}">📍 Google Maps｜${esc(x[5]||x[2])}</a>${bl.length?`<div class="quicklinks">${bl.map(l=>`<a href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}</div><div class="actions"><button class="iconbtn" onclick="editItem(${i})">✎</button><button class="iconbtn" onclick="delItem(${i})">🗑</button></div></div>`+(d.items[i+1]?betweenTransportRow(x,d.items[i+1]):"");
-}).join("")}</div>`;
-links.innerHTML=(data.links[d.date]||[]).map(l=>`<div class="linkcard"><strong>${esc(l[0])}</strong><br><a href="${esc(l[1])}">開啟預約／訂票網站 ↗</a></div>`).join("")||'<div class="note">本日沒有固定網站；上方每個需要預約的行程會自動產生查詢。</div>';
-let a=[];if(d.date==="2026-12-03")a.push("🎄 12/3 花車／夜間遊行的確切時間待官方公布。 ");if(d.date==="2026-12-07")a.push("✈️ 15:00 池袋→成田為暫估，需依航班時間鎖定車次。");notice.innerHTML=a.map(v=>`<div class="warn">${v}</div>`).join("")}
-function addItem(){editIndex=null;openModal("新增行程",["","","","自由","","","","auto","0",""])}
-function editItem(i){editIndex=i;openModal("編輯行程",data.days[dayIndex].items[i])}
-function openModal(t,x){modalTitle.textContent=t;fStart.value=x[0]||"";fEnd.value=x[1]||"";fTitle.value=x[2]||"";fCat.value=x[3]||"自由";fNote.value=x[4]||"";fPlace.value=x[5]||"";fBook.value=x[7]||"auto";fAdvance.value=x[8]||"0";fCustomDays.value=x[9]||30;toggleCustom();modal.classList.add("open")}
-function toggleCustom(){customDaysWrap.style.display=fAdvance.value==="custom"?"block":"none"}
-fAdvance.addEventListener("change",toggleCustom);
-function closeModal(){modal.classList.remove("open")}
-function saveItem(){let p=fPlace.value||fTitle.value,x=[fStart.value,fEnd.value,fTitle.value,fCat.value,fNote.value,p,p,fBook.value,fAdvance.value,fCustomDays.value];if(!x[2])return alert("請輸入行程名稱");if(editIndex===null)data.days[dayIndex].items.push(x);else data.days[dayIndex].items[editIndex]=x;data.days[dayIndex].items.sort((a,b)=>a[0].localeCompare(b[0]));save();closeModal();render()}
-function delItem(i){if(confirm("刪除此行程？")){data.days[dayIndex].items.splice(i,1);save();render()}}
-function resetData(){if(confirm("恢復原始行程？這會清除你後來新增／修改的內容。")){data=JSON.parse(JSON.stringify(original));save();render()}}
-function allReminders(){const out=[];data.days.forEach(d=>d.items.forEach((x,i)=>{const rule=x[8]||"0";if(rule!=="0"){const rd=reminderDate(d.date,rule,Number(x[9]||30));out.push({date:d.date,label:d.label,title:x[2],type:bookingType(x),rd,idx:i})}}));return out.sort((a,b)=>a.rd-b.rd)}
-function showReminders(){const rs=allReminders();if(!rs.length)reminderList.innerHTML='<div class="note">目前沒有設定預約／訂票提醒。編輯或新增行程時，可設定「提前 1 個月／30 天／自訂天數」。</div>';else reminderList.innerHTML=rs.map(r=>`<div class="linkcard"><strong>${r.type==="restaurant"?"🍽️":"🎫"} ${esc(r.title)}</strong><div class="note">${r.label}｜行程日 ${r.date}<br><b>提醒日：${fmtDate(r.rd)}</b></div><button class="btn" style="margin-top:8px" onclick="dayIndex=${data.days.findIndex(d=>d.date===r.date)};closeReminder();render()">查看行程</button></div>`).join("");reminderModal.classList.add("open")}
-function closeReminder(){reminderModal.classList.remove("open")}
-let deferredPrompt;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e});function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}else alert("iPhone 請在 Safari 點分享 → 加入主畫面。")}
-if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");render();
-</script></body></html>
+  <main id="top">
+    <section class="intro" aria-labelledby="pageTitle">
+      <img class="intro-art" src="./assets/tokyo-winter-journey.png" alt="冬日東京旅行插畫，包含機場列車、池袋天際線、淺草寺與晴空塔">
+      <div class="intro-copy-block">
+        <p class="eyebrow">TOKYO · 2026 冬</p>
+        <h1 id="pageTitle">12/02 <span>→</span> 12/07</h1>
+        <p class="intro-copy">時間、交通、Google 地圖與票券，全部依日期排好。按「編輯」即可改時間與內容。</p>
+        <a class="hotel-card" href="https://www.google.com/maps/search/?api=1&query=RUTiLE%20IKEBUKURO%20TOKYO%201-5-3%20Ikebukuro" target="_blank" rel="noreferrer">
+          <span>五晚住宿</span>
+          <strong>RUTiLE IKEBUKURO／ルチル池袋東京</strong>
+          <small>〒170-0014 東京都豊島区池袋1-5-3 · 開啟地圖 ↗</small>
+        </a>
+      </div>
+      <div class="trip-meta" aria-label="旅程摘要">
+        <div><span>住宿</span><strong id="hotelSummary">池袋</strong></div>
+        <div><span>天數</span><strong>6 日</strong></div>
+        <div><span>時區</span><strong>日本 GMT+9</strong></div>
+      </div>
+    </section>
+
+    <section class="trip-alerts" aria-label="行前重要提醒">
+      <article><span>01</span><div><strong>兩件待確認</strong><p>12/3 要去 Disneyland 還是 DisneySea？以及 12/7 回程航班的起飛時間與航廈。</p></div></article>
+      <article><span>02</span><div><strong>飯店實際 10:00 退房</strong><p>原訂 12:00 已調整。飯店無常駐櫃檯，抵達前與退房後寄放行李都要先傳訊確認。</p></div></article>
+      <article><span>03</span><div><strong>交通為保守估時</strong><p>票價與班次會變動；每張行程卡的 Google 路線會用當下時間重新計算。</p></div></article>
+    </section>
+
+    <section class="planner-shell" aria-label="每日行程規劃">
+      <nav class="day-tabs" id="dayTabs" aria-label="選擇日期" role="tablist"></nav>
+
+      <div class="toolbar">
+        <div>
+          <p class="toolbar-date" id="activeDate">12月02日 · 星期三</p>
+          <p class="toolbar-note" id="activeTheme">抵達東京・池袋散步</p>
+        </div>
+        <button class="primary-button" id="addButton" type="button">＋ 新增行程</button>
+      </div>
+
+      <div class="day-notice" id="dayNotice" role="note"></div>
+
+      <div class="content-grid">
+        <section class="timeline" id="timeline" aria-live="polite"></section>
+        <aside class="ticket-panel" aria-labelledby="ticketTitle">
+          <div class="ticket-heading">
+            <p class="eyebrow">BOOKING DESK</p>
+            <h2 id="ticketTitle">今日票券與預約</h2>
+          </div>
+          <div id="ticketList"></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>資料於 2026/09/14 查核。班次、票價、營業時間與活動時刻仍可能調整；出發前請再按每日官方連結確認。</footer>
+
+  <dialog id="editorDialog">
+    <form method="dialog" id="editorForm">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">EDIT STOP</p>
+          <h2 id="dialogTitle">新增行程</h2>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="關閉">×</button>
+      </div>
+      <input type="hidden" id="itemId">
+      <label>時間<input id="itemTime" type="time" required></label>
+      <label>行程名稱<input id="itemTitle" type="text" required maxlength="80"></label>
+      <label>地點或地址<input id="itemAddress" type="text" maxlength="180" placeholder="可直接貼地標名稱"></label>
+      <label>備註<textarea id="itemNote" rows="3" maxlength="300"></textarea></label>
+      <label>交通資訊<input id="itemTransit" type="text" maxlength="160" placeholder="例：JR 山手線｜25 分｜¥210"></label>
+      <label>Google 路線模式
+        <select id="itemMode">
+          <option value="trans">大眾運輸</option>
+          <option value="walking">步行</option>
+          <option value="driving">開車／計程車</option>
+        </select>
+      </label>
+      <div class="dialog-actions">
+        <button class="ghost-button" value="cancel">取消</button>
+        <button class="primary-button" id="saveButton" value="default">儲存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./trip-data-a.js"></script>
+  <script src="./trip-data-b.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
